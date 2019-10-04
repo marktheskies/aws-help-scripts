@@ -9,8 +9,8 @@ Use this script to solve this problem and automate the deletion of Backup-create
 To get started, clone the repo and install the dependencies with pip.
 
 ```bash
-git clone UPDATEME!
-cd UPDATEME!
+git clone https://github.com/marktheskies/aws-help-scripts.git
+cd aws-helper-scripts/delete-old-backup-recovery-points
 pip install -r requirements.txt
 ```
 
