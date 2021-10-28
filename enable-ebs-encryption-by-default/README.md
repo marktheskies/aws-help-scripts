@@ -25,11 +25,12 @@ export AWS_SECRET_ACCESS_KEY="your_aws_secret_access_key"
 export AWS_PROFILE="your_profile_name"
 ```
 
-**Step 3 -** Configure and activate your virtual environment.
+**Step 3 -** Configure and activate your virtual environment, and install dependencies.
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 **Step 4 -** Run it!
