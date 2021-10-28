@@ -8,8 +8,8 @@ account. The script simply enables EBS encryption by default across all enabled 
 **Step 1 -** Clone this repo to your local machine.
 
 ```bash
-git clone https://github.com/marktheskies/enable-ebs-encryption-by-default
-cd enable-ebs-encryption-by-default
+git clone https://github.com/marktheskies/aws-helper-scripts.git
+cd aws-helper-scripts/enable-ebs-encryption-by-default
 ```
 
 **Step 2 (Option 1) -** Set your AWS access key ID and AWS secret access key.
