@@ -17,6 +17,8 @@ Resources:
       Protocol: email
       Endpoint: !Ref NotificationEmailAddress
       Region: !Ref AWS::Region
+
+  # 3.6 Ensure a log metric filter and alarm exist for AWS Management Console authentication failures
   ConsoleAuthFailuresMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
