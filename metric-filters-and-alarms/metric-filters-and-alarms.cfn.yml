@@ -68,6 +68,31 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
+  # 3.3 Ensure a log metric filter and alarm exist for usage of "root" account
+  RootAccountUsageMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: '{ $.userIdentity.type = "Root" && $.userIdentity.invokedBy NOT EXISTS && $.eventType != "AwsServiceEvent" }'
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: RootAccountUsage
+  RootAccountUsageAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: RootAccountUsage
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for root account usage
+      AlarmName: RootAccountUsage
+      AlarmActions:
+        - !Ref SnsTopic
+
   # 3.6 Ensure a log metric filter and alarm exist for AWS Management Console authentication failures
   ConsoleAuthFailuresMetricFilter:
     Type: AWS::Logs::MetricFilter
