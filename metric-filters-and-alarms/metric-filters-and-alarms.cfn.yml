@@ -1,0 +1,28 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Metric filters and alarms to assist with CIS Benchmark compliance
+
+Parameters:
+  NotificationEmailAddress:
+    Type: String
+  CloudTrailLogGroup:
+    Type: String
+Resources:
+  SnsTopic:
+    Type: AWS::SNS::Topic
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SnsTopic
+      Protocol: email
+      Endpoint: !Ref NotificationEmailAddress
+      Region: !Ref AWS::Region
+  ConsoleAuthFailuresMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: '{ ($.eventName = ConsoleLogin) && ($.errorMessage = "Failed authentication") }'
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: ConsoleAuthFailures
