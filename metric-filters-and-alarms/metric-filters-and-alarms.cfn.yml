@@ -37,6 +37,7 @@ Resources:
       EvaluationPeriods: 1
       Period: 300
       Threshold: 1
+      Statistic: Sum
       AlarmDescription: Alarm for AWS console authentication failures
       AlarmName: ConsoleAuthFailures
       AlarmActions:
