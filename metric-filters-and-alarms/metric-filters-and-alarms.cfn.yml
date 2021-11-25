@@ -28,3 +28,16 @@ Resources:
         - MetricValue: "1"
           MetricNamespace: CISBenchmark
           MetricName: ConsoleAuthFailures
+  ConsoleAuthFailuresAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: ConsoleAuthFailures
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      AlarmDescription: Alarm for AWS console authentication failures
+      AlarmName: ConsoleAuthFailures
+      AlarmActions:
+        - !Ref SnsTopic
