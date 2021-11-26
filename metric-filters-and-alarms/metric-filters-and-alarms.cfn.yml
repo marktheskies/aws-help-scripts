@@ -192,3 +192,28 @@ Resources:
       AlarmName: KmsCmkDisablingOrScheduledDeletion
       AlarmActions:
         - !Ref SnsTopic
+
+  # 3.8  Ensure a log metric filter and alarm exist for S3 bucket policy changes
+  S3BucketPolicyChangesMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "{($.eventSource = s3.amazonaws.com) && (($.eventName = PutBucketAcl) || ($.eventName = PutBucketPolicy) || ($.eventName = PutBucketCors) || ($.eventName = PutBucketLifecycle) || ($.eventName = PutBucketReplication) || ($.eventName = DeleteBucketPolicy) || ($.eventName = DeleteBucketCors) || ($.eventName = DeleteBucketLifecycle) || ($.eventName = DeleteBucketReplication)) }"
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: S3BucketPolicyChanges
+  S3BucketPolicyChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: S3BucketPolicyChanges
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for S3 bucket policy changes
+      AlarmName: S3BucketPolicyChanges
+      AlarmActions:
+        - !Ref SnsTopic
