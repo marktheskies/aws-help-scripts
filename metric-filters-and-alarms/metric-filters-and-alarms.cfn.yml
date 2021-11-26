@@ -292,3 +292,28 @@ Resources:
       AlarmName: NaclChanges
       AlarmActions:
         - !Ref SnsTopic
+
+  # 3.12 Ensure a log metric filter and alarm exist for changes to network gateways
+  NetworkGatewayChangesMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "{ ($.eventName = CreateCustomerGateway) || ($.eventName = DeleteCustomerGateway) || ($.eventName = AttachInternetGateway) || ($.eventName = CreateInternetGateway) || ($.eventName = DeleteInternetGateway) || ($.eventName = DetachInternetGateway) }"
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: NetworkGatewayChanges
+  NetworkGatewayChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: NetworkGatewayChanges
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for network gateway changes
+      AlarmName: NetworkGatewayChanges
+      AlarmActions:
+        - !Ref SnsTopic
