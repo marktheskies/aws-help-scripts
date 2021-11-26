@@ -118,6 +118,31 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
+  # 3.5 Ensure a log metric filter and alarm exist for CloudTrail configuration changes
+  CloudTrailConfigurationChangesMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "{($.eventName = CreateTrail) || ($.eventName = UpdateTrail) || ($.eventName = DeleteTrail) || ($.eventName = StartLogging) || ($.eventName = StopLogging)}"
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: CloudTrailConfigurationChanges
+  CloudTrailConfigurationChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: CloudTrailConfigurationChanges
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for CloudTrail configuration changes
+      AlarmName: CloudTrailConfigurationChanges
+      AlarmActions:
+        - !Ref SnsTopic
+
   # 3.6 Ensure a log metric filter and alarm exist for AWS Management Console authentication failures
   ConsoleAuthFailuresMetricFilter:
     Type: AWS::Logs::MetricFilter
