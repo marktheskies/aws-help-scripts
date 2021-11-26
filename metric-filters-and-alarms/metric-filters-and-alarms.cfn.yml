@@ -18,7 +18,7 @@ Resources:
       Endpoint: !Ref NotificationEmailAddress
       Region: !Ref AWS::Region
 
-  # 3.1 Ensure a log metric filter and alarm exist for unauthorized API calls
+  # 4.1 Ensure a log metric filter and alarm exist for unauthorized API calls
   UnauthorizedApiCallsMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -43,7 +43,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.2 Ensure a log metric filter and alarm exist for Management Console sign-in without MFA
+  # 4.2 Ensure a log metric filter and alarm exist for Management Console sign-in without MFA
   ConsoleLoginWithoutMfaMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -68,7 +68,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.3 Ensure a log metric filter and alarm exist for usage of "root" account
+  # 4.3 Ensure a log metric filter and alarm exist for usage of "root" account
   RootAccountUsageMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -93,7 +93,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.4 Ensure a log metric filter and alarm exist for IAM policy changes
+  # 4.4 Ensure a log metric filter and alarm exist for IAM policy changes
   IamPolicyChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -118,7 +118,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.5 Ensure a log metric filter and alarm exist for CloudTrail configuration changes
+  # 4.5 Ensure a log metric filter and alarm exist for CloudTrail configuration changes
   CloudTrailConfigurationChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -143,7 +143,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.6 Ensure a log metric filter and alarm exist for AWS Management Console authentication failures
+  # 4.6 Ensure a log metric filter and alarm exist for AWS Management Console authentication failures
   ConsoleAuthFailuresMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -168,7 +168,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.7 Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer created CMKs
+  # 4.7 Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer created CMKs
   KmsCmkDisablingOrScheduledDeletionMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -193,7 +193,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.8  Ensure a log metric filter and alarm exist for S3 bucket policy changes
+  # 4.8  Ensure a log metric filter and alarm exist for S3 bucket policy changes
   S3BucketPolicyChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -218,7 +218,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.9 Ensure a log metric filter and alarm exist for AWS Config configuration changes
+  # 4.9 Ensure a log metric filter and alarm exist for AWS Config configuration changes
   AwsConfigConfigurationChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -243,7 +243,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.10 Ensure a log metric filter and alarm exist for security group changes
+  # 4.10 Ensure a log metric filter and alarm exist for security group changes
   SecurityGroupChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -268,7 +268,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.11 Ensure a log metric filter and alarm exist for changes to Network Access Control Lists (NACL)
+  # 4.11 Ensure a log metric filter and alarm exist for changes to Network Access Control Lists (NACL)
   NaclChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -293,7 +293,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.12 Ensure a log metric filter and alarm exist for changes to network gateways
+  # 4.12 Ensure a log metric filter and alarm exist for changes to network gateways
   NetworkGatewayChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -318,7 +318,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.13 Ensure a log metric filter and alarm exist for route table changes
+  # 4.13 Ensure a log metric filter and alarm exist for route table changes
   RouteTableChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -343,7 +343,7 @@ Resources:
       AlarmActions:
         - !Ref SnsTopic
 
-  # 3.14 Ensure a log metric filter and alarm exist for VPC changes
+  # 4.14 Ensure a log metric filter and alarm exist for VPC changes
   VpcChangesMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -365,5 +365,30 @@ Resources:
       Statistic: Sum
       AlarmDescription: Alarm for VPC changes
       AlarmName: VpcChanges
+      AlarmActions:
+        - !Ref SnsTopic
+
+  # 4.15 Ensure a log metric filter and alarm exists for AWS Organizations changes
+  OrganizationsChangesMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: '{ ($.eventSource = organizations.amazonaws.com) && (($.eventName = "AcceptHandshake") || ($.eventName = "AttachPolicy") || ($.eventName = "CreateAccount") || ($.eventName = "CreateOrganizationalUnit") || ($.eventName = "CreatePolicy") || ($.eventName = "DeclineHandshake") || ($.eventName = "DeleteOrganization") || ($.eventName = "DeleteOrganizationalUnit") || ($.eventName = "DeletePolicy") || ($.eventName = "DetachPolicy") || ($.eventName = "DisablePolicyType") || ($.eventName = "EnablePolicyType") || ($.eventName = "InviteAccountToOrganization") || ($.eventName = "LeaveOrganization") || ($.eventName = "MoveAccount") || ($.eventName = "RemoveAccountFromOrganization") || ($.eventName = "UpdatePolicy") || ($.eventName = "UpdateOrganizationalUnit")) }'
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: OrganizationsChanges
+  OrganizationsChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: OrganizationsChanges
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for AWS Organizations changes
+      AlarmName: OrganizationsChanges
       AlarmActions:
         - !Ref SnsTopic
