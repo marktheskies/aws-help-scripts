@@ -167,3 +167,28 @@ Resources:
       AlarmName: ConsoleAuthFailures
       AlarmActions:
         - !Ref SnsTopic
+
+  # 3.7 Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer created CMKs
+  KmsCmkDisablingOrScheduledDeletionMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "{($.eventSource = kms.amazonaws.com) && (($.eventName=DisableKey)||($.eventName=ScheduleKeyDeletion)) }"
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: KmsCmkDisablingOrScheduledDeletion
+  KmsCmkDisablingOrScheduledDeletionAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: KmsCmkDisablingOrScheduledDeletion
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for KMS CMK changed state to Disabled or Scheduled Deletion
+      AlarmName: KmsCmkDisablingOrScheduledDeletion
+      AlarmActions:
+        - !Ref SnsTopic
