@@ -64,4 +64,4 @@ If you would like to contribute, please open an issue or create a PR with your p
 
 ## Mentions
 
-This architecture is based on guidelines defined in Section 3 (Monitoring) of [CIS Amazon Web Services Foundations](https://d1.awsstatic.com/whitepapers/compliance/AWS_CIS_Foundations_Benchmark.pdf).
+This architecture is based on guidelines defined in Section 4 (Monitoring) of CIS Amazon Web Services Foundations v1.4.0.
