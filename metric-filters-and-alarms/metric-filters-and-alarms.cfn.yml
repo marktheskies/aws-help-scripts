@@ -317,3 +317,28 @@ Resources:
       AlarmName: NetworkGatewayChanges
       AlarmActions:
         - !Ref SnsTopic
+
+  # 3.13 Ensure a log metric filter and alarm exist for route table changes
+  RouteTableChangesMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "{ ($.eventName = CreateRoute) || ($.eventName = CreateRouteTable) || ($.eventName = ReplaceRoute) || ($.eventName = ReplaceRouteTableAssociation) || ($.eventName = DeleteRouteTable) || ($.eventName = DeleteRoute) || ($.eventName = DisassociateRouteTable) }"
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: RouteTableChanges
+  RouteTableChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: RouteTableChanges
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for route table changes
+      AlarmName: RouteTableChanges
+      AlarmActions:
+        - !Ref SnsTopic
