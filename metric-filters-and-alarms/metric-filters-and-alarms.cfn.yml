@@ -47,7 +47,7 @@ Resources:
   ConsoleLoginWithoutMfaMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
-      FilterPattern: '{ ($.eventName = "ConsoleLogin") && ($.additionalEventData.MFAUsed != "Yes") }'
+      FilterPattern: '{ ($.eventName = "ConsoleLogin") && ($.additionalEventData.MFAUsed != "Yes") && ($.userIdentity.sessionContext.sessionIssuer.arn != "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*/*") }'
       LogGroupName: !Ref CloudTrailLogGroup
       MetricTransformations:
         - MetricValue: "1"

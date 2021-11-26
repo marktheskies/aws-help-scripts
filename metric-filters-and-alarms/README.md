@@ -2,6 +2,20 @@
 
 This architecture is designed to help you in the right direction to acheive CIS benchmark compliance within your AWS account by providing metric filters and alarms to a specified endpoint. For example, you can notify your security team via ticketing system.
 
+## Important
+
+The alarm for Console Signin Without MFA assumes that you enforce MFA at the IdP level. We use Google Workspaces at my current organisation and therefore cannot manage MFA within AWS SSO.
+
+If you use an IdP offically supported by AWS SSO, or do not use AWS SSO, change ConsoleLoginWithoutMfaMetricFilter.Properties.FilterPattern as per below.
+
+```yaml
+ConsoleLoginWithoutMfaMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: '{ ($.eventName = "ConsoleLogin") && ($.additionalEventData.MFAUsed != "Yes") }'
+      ...
+```
+
 ## How to deploy the architecture for the first time
 
 If you are deploying this architecture for the first time, follow these steps.
