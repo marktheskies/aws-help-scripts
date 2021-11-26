@@ -22,7 +22,7 @@ Resources:
   UnauthorizedApiCallsMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
-      FilterPattern: '{ ($.errorCode = "*UnauthorizedOperation") || ($.errorCode = "AccessDenied*") }'
+      FilterPattern: '{(($.errorCode="*UnauthorizedOperation") || ($.errorCode="AccessDenied*")) && (($.sourceIPAddress!="delivery.logs.amazonaws.com") && ($.eventName!="HeadBucket"))}'
       LogGroupName: !Ref CloudTrailLogGroup
       MetricTransformations:
         - MetricValue: "1"
