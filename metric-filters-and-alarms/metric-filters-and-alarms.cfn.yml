@@ -217,3 +217,28 @@ Resources:
       AlarmName: S3BucketPolicyChanges
       AlarmActions:
         - !Ref SnsTopic
+
+  # 3.9 Ensure a log metric filter and alarm exist for AWS Config configuration changes
+  AwsConfigConfigurationChangesMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "{($.eventSource = config.amazonaws.com) && (($.eventName = StopConfigurationRecorder) || ($.eventName = DeleteDeliveryChannel) || ($.eventName = PutDeliveryChannel) || ($.eventName = PutConfigurationRecorder))}"
+      LogGroupName: !Ref CloudTrailLogGroup
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: CISBenchmark
+          MetricName: AwsConfigConfigurationChanges
+  AwsConfigConfigurationChangesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      MetricName: AwsConfigConfigurationChanges
+      Namespace: CISBenchmark
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      Period: 300
+      Threshold: 1
+      Statistic: Sum
+      AlarmDescription: Alarm for AWS Config configuration changes
+      AlarmName: AwsConfigConfigurationChanges
+      AlarmActions:
+        - !Ref SnsTopic
