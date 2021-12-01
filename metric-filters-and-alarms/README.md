@@ -37,6 +37,12 @@ Run the following AWS CLI command to deploy the CloudFormation stack containing 
 aws cloudformation create-stack --template-body file://metric-filters-and-alarms.cfn.yml --stack-name Metric-Filters-And-Alarms --parameters ParameterKey=NotificationEmailAddress,ParameterValue=<email_address_for_notifications> ParameterKey=CloudTrailLogGroup,ParameterValue=<cloudtrail_cloudwatch_log_group>
 ```
 
+If you want to enable encryption at rest for the SNS topic, you can specify a KMS Key ID in the `create-stack` command. For example:
+
+```
+aws cloudformation create-stack --template-body file://metric-filters-and-alarms.cfn.yml --stack-name Metric-Filters-And-Alarms --parameters ParameterKey=NotificationEmailAddress,ParameterValue=<email_address_for_notifications> ParameterKey=CloudTrailLogGroup,ParameterValue=<cloudtrail_cloudwatch_log_group> ParameterKey=KmsMasterKeyId,ParameterValue=<kms_master_key_id>
+```
+
 ## How to update the architecture
 
 If you have already deployed the architecture and are updating the stack, follow these steps.
@@ -56,6 +62,12 @@ Run the following AWS CLI command to update the CloudFormation stack. Replace `<
 
 ```bash
 aws cloudformation update-stack --template-body file://metric-filters-and-alarms.cfn.yml --stack-name Metric-Filters-And-Alarms --parameters ParameterKey=NotificationEmailAddress,ParameterValue=<email_address_for_notifications> ParameterKey=CloudTrailLogGroup,ParameterValue=<cloudtrail_cloudwatch_log_group>
+```
+
+For encryption at rest on the SNS topic, you can specify a KMS Key ID in the `update-stack` command. For example:
+
+```
+aws cloudformation update-stack --template-body file://metric-filters-and-alarms.cfn.yml --stack-name Metric-Filters-And-Alarms --parameters ParameterKey=NotificationEmailAddress,ParameterValue=<email_address_for_notifications> ParameterKey=CloudTrailLogGroup,ParameterValue=<cloudtrail_cloudwatch_log_group> ParameterKey=KmsMasterKeyId,ParameterValue=<kms_master_key_id>
 ```
 
 ## How to contribute
