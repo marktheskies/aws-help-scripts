@@ -7,14 +7,11 @@ Parameters:
     Type: String
   CloudTrailLogGroup:
     Type: String
-  KmsMasterKeyId:
-    Type: String
-    Default: ""
+
 Resources:
   SnsTopic:
     Type: AWS::SNS::Topic
-    Properties:
-      KmsMasterKeyId: !Ref KmsMasterKeyId
+
   SnsSubscription:
     Type: AWS::SNS::Subscription
     Properties:
